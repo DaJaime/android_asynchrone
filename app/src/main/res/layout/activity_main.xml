@@ -37,6 +37,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Load images" />
+
+            <Button
+                android:id="@+id/mainActivity_btnSave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Save" />
         </LinearLayout>
 
         <ListView

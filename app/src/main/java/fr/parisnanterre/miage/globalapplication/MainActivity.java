@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import fr.parisnanterre.miage.globalapplication.asyncTask.LoadMovieImageTask;
 import fr.parisnanterre.miage.globalapplication.asyncTask.LoadMovieImageThread;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +18,10 @@ import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+import static java.util.concurrent.Executors.newFixedThreadPool;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     List<Movie> movieListe = new ArrayList();
@@ -28,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new Movie("Coq", "2019", "Coq", null)
     };
     public MovieAdapter movieAdapter;
+    ExecutorService fixedPool;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,25 +53,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button loadBtn = findViewById(R.id.mainActivity_btnLoad);
         Button addBtn = findViewById(R.id.mainActivity_btnAdd);
         Button delBtn = findViewById(R.id.mainActivity_btnDelete);
+        Button saveBtn = findViewById(R.id.mainActivity_btnSave);
         loadBtn.setOnClickListener(this);
         addBtn.setOnClickListener(this);
         delBtn.setOnClickListener(this);
+        saveBtn.setOnClickListener(this);
+
+        // Create executor
+        fixedPool = Executors.newFixedThreadPool(2);
     }
 
     @Override
     public void onClick(View view)
     {
         if(view.getId() == R.id.mainActivity_btnLoad) {
+
             for (Movie m : movieListe) {
-                /* **************** With Async Task ************************************
+                /* **************** With Async Task ************************************/
                 LoadMovieImageTask imgTask = new LoadMovieImageTask(m, movieAdapter);
-                imgTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, "https://picsum.photos/100/100");
+                imgTask.executeOnExecutor(fixedPool, "https://picsum.photos/100/100");
                 // imgTask.execute("https://picsum.photos/100/100");
-                 ***********************************************************************/
-                /* **************** With Thread ************************************/
+
+                /* **************** With Thread ************************************
                 LoadMovieImageThread imgThread = new LoadMovieImageThread(m, movieAdapter, "https://picsum.photos/100/100");
                 Thread t = new Thread(imgThread);
                 t.start();
+                ***********************************************************************/
             }
         }
         if(view.getId() == R.id.mainActivity_btnAdd) {
@@ -73,6 +88,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(view.getId() == R.id.mainActivity_btnDelete) {
             movieListe.clear();
             movieAdapter.notifyDataSetChanged();
+        }
+        if(view.getId() == R.id.mainActivity_btnSave){
+            Intent myIntent = new Intent(MainActivity.this, SaveActivity.class);
+            MainActivity.this.startActivity(myIntent);
         }
     }
 }
