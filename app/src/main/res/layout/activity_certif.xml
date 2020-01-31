@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="" />
+        android:text="https://coursenligne.parisnanterre.fr/" />
 
     <Button
         android:id="@+id/saveActivity_buttonGet"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="" />
+        android:text="https://coursenligne.parisnanterre.fr/" />
 
     <Button
         android:id="@+id/saveActivity_buttonTest"
